@@ -8,6 +8,7 @@
 !.local/bin/checkupdates
 
 !assets
+!assets/**
 !Scripts
 !.config
 
