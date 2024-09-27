@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+#
+#   checkupdates: Safely print a list of pending updates.
+#
+#   Copyright (c) 2013 Kyle Keen <keenerd@gmail.com>
+#
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+
+die() {
+  echo "Error: $@" >&2
+  exit 1
+}
+
+command -v fakeroot >/dev/null || die 'Cannot find fakeroot binary'
+
+CHECKUPDATES_DB="${CHECKUPDATES_DB:-${TMPDIR:-/tmp}/checkup-db-${UID}}"
+trap 'rm -f "$CHECKUPDATES_DB/db.lck"' INT TERM EXIT
+
+DBPath="$(pacman-conf DBPath)"
+DBPath="${DBPath:-/var/lib/pacman/}"
+
+mkdir -p "$CHECKUPDATES_DB" || die 'Failed to create directory'
+ln -sf "${DBPath}/local" "$CHECKUPDATES_DB" || die 'Failed to create symlink'
+fakeroot -- pacman -Sy --dbpath "$CHECKUPDATES_DB" --logfile /dev/null &>/dev/null || die 'Failed to fetch updates'
+
+mapfile -t updates < <(pacman -Qu --dbpath "$CHECKUPDATES_DB" 2>/dev/null | grep -v '\[.*\]')
+printf '%s\n' "${updates[@]}" || exit 2
