@@ -10,6 +10,7 @@
 !assets
 !assets/**
 !Scripts
+!Scripts/**
 !.config
 
 !.config/alacritty

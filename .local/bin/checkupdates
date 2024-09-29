@@ -18,22 +18,27 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+set -euo pipefail
+
 die() {
-  echo "Error: $@" >&2
+  echo "Error: $1" >&2
   exit 1
 }
 
 command -v fakeroot >/dev/null || die 'Cannot find fakeroot binary'
 
+PMS=("yay" "paru" "pacman")
+for PM in "${PMS[@]}"; do
+  command -v $PM >/dev/null && break || PM=""
+done
+: "${PM:?No supported package manager found}"
+
 CHECKUPDATES_DB="${CHECKUPDATES_DB:-${TMPDIR:-/tmp}/checkup-db-${UID}}"
-trap 'rm -f "$CHECKUPDATES_DB/db.lck"' INT TERM EXIT
+DBPath=$(pacman-conf DBPath || echo "/var/lib/pacman")
+trap 'rm -f "$CHECKUPDATES_DB/db.lck"' EXIT
 
-DBPath="$(pacman-conf DBPath)"
-DBPath="${DBPath:-/var/lib/pacman/}"
+mkdir -p $CHECKUPDATES_DB
+[ -L "$CHECKUPDATES_DB/local" ] || ln -s $DBPath/local $CHECKUPDATES_DB/local
 
-mkdir -p "$CHECKUPDATES_DB" || die 'Failed to create directory'
-ln -sf "${DBPath}/local" "$CHECKUPDATES_DB" || die 'Failed to create symlink'
-fakeroot -- pacman -Sy --dbpath "$CHECKUPDATES_DB" --logfile /dev/null &>/dev/null || die 'Failed to fetch updates'
-
-mapfile -t updates < <(pacman -Qu --dbpath "$CHECKUPDATES_DB" 2>/dev/null | grep -v '\[.*\]')
-printf '%s\n' "${updates[@]}" || exit 2
+fakeroot $PM -Sy --dbpath $CHECKUPDATES_DB --logfile /dev/null &>/dev/null
+$PM -Qu --dbpath $CHECKUPDATES_DB 2>/dev/null | grep -v '\[.*\]'
