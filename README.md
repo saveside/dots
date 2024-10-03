@@ -1,4 +1,4 @@
-![sway](assets/S.png)
+![sway](assets/Banner.png)
 
 This is my personal repo for my Arch linux configurations.
 
