@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+_exit() {
+  rm -f /var/tmp/mirror.lock
+  echo -e "$2"
+  exit $1
+}
+
+PROTOCOL="https"
+MIRROR_DIR="/etc/pacman.d"
+BACKUP_DIR="/var/tmp/mirrors"
+LOG_FILE="/var/log/mirror.log"
+MIRRORLISTS=(
+  "arch"
+  "cachyos"
+  "chaotic-aur"
+)
+SAVE_FILES=(
+  "$MIRROR_DIR/mirrorlist"
+  "$MIRROR_DIR/cachyos-mirrorlist"
+  "$MIRROR_DIR/chaotic-mirrorlist"
+)
+
+RED="\033[31m"
+GREEN="\033[32m"
+YELLOW="\033[33m"
+RESET="\033[0m"
+
+if [ $EUID -ne 0 ]; then
+  _exit 1 "${RED}This script requires root.${RESET}"
+fi
+
+if ! command -v rate-mirrors &>/dev/null; then
+  _exit 1 "${RED}Error: 'rate-mirrors' is not installed. Please install it before running this script.${RESET}"
+fi
+
+touch /var/tmp/mirror.lock
+
+mkdir -p $BACKUP_DIR
+
+touch $LOG_FILE
+
+TOTAL_MIRRORS=${#MIRRORLISTS[@]}
+
+for i in "${!MIRRORLISTS[@]}"; do
+  echo -ne "[${YELLOW}$((i + 1))/$TOTAL_MIRRORS${RESET}] ${YELLOW}Updating ${MIRRORLISTS[$i]} mirrors...${RESET}\033[0K\r"
+
+  rate-mirrors --allow-root --disable-comments-in-file --protocol $PROTOCOL --save="${SAVE_FILES[$i]}" "${MIRRORLISTS[$i]}" >/dev/null 2>&1
+
+  if [ $? -ne 0 ]; then
+    _exit 1 "${RED}Error: Failed to update ${MIRRORLISTS[$i]} mirrors.${RESET}"
+  fi
+done
+
+_exit 0 "${GREEN}All mirror lists updated successfully.${RESET}"

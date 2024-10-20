@@ -1,4 +1,4 @@
-![sway](assets/S.png)
+![sway](assets/Banner.png)
 
 This is my personal repo for my Arch linux configurations.
 
@@ -27,14 +27,14 @@ You can also use `yay -S --needed - < pkgs` to install all dependencies.
 Incomplete but should get you most things.
 
 ```bash
-chezmoi init https://github.com/saveside/dotfiles
-chezmoi apply -v
-# Optional if you want to get san francisco pro font
-mkdir -p ~/.fonts
-wget xeome.dev/sf-pro.zip && unzip sf-pro.zip -d ~/.fonts
-wget https://github.com/githubnext/monaspace/releases/download/v1.000/monaspace-v1.000.zip && unzip monaspace-v1.000.zip -d ~/.fonts
-fc-cache -frv
-rm -rf "sf-pro.zip" "monaspace-v1.000.zip"
+# clone repository
+git clone https://github.com/saveside/dots.git
+# install required packages (requires root)
+pacman -S --needed $(cat dots/pkgs)
+# copy repository contents to HOME
+cp -r dots/.* $HOME
+# restart system
+reboot
 ```
 
 # Some shortcuts
@@ -52,4 +52,4 @@ rm -rf "sf-pro.zip" "monaspace-v1.000.zip"
 
 ## Screenshots
 
-![sway](assets/gruvbox.png)
+![sway](assets/gruvbox_stackedd.png)

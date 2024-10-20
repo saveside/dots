@@ -6,6 +6,7 @@
 !.local
 !.local/bin
 !.local/bin/checkupdates
+!.local/bin/fetchmirrors
 
 !assets
 !assets/**
@@ -57,3 +58,6 @@
 
 !.config/zellij
 !.config/zellij/**
+
+!.config/fastfetch
+!.config/fastfetch/**
