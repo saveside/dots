@@ -1,0 +1,145 @@
+{
+    "height": 32,
+    "spacing": 10,
+    "modules-left": [
+        "sway/workspaces",
+        "custom/vpn",
+        "custom/updates",
+        "custom/weather",
+        "idle_inhibitor"
+    ],
+    "modules-center": [
+        "sway/window"
+    ],
+    "modules-right": [
+        "network",
+        "pulseaudio",
+        "clock",
+        "battery",
+        "tray"
+    ],
+    "sway/mode": {
+        "format": "<span style=\"italic\">{}</span>"
+    },
+    "sway/scratchpad": {
+        "format": "{icon} {count}",
+        "show-empty": false,
+        "format-icons": [
+            "",
+            " "
+        ],
+        "tooltip": true,
+        "tooltip-format": "{app}: {title}"
+    },
+    "sway/window": {
+        "on-click": "ags -t datemenu",
+        "tooltip": false
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": " ",
+            "deactivated": " "
+        }
+    },
+    "tray": {
+        "spacing": 10
+    },
+    "clock": {
+      "format": "  {:%I:%M %p ・   %m/%d/%y}",
+      "rotate": 0,
+      "tooltip-format": "<tt>{calendar}</tt>",
+      "calendar": {
+        "mode": "month",
+        "mode-mon-col": 3,
+        "on-scroll": 1,
+        "on-click-right": "mode",
+        "format": {
+          "months": "<span color='#fab387'><b>{}</b></span>",
+          "weekdays": "<span color='#f9e2af'><b>{}</b></span>",
+          "today": "<span color='#f38ba8'><b>{}</b></span>"
+        }
+    }
+    },
+    "backlight": {
+        "format": "{icon} {percent}%",
+        "format-icons": [
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            " "
+        ]
+    },
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": " {capacity}%",
+        "format-plugged": " {capacity}%",
+        "format-icons": [
+            " ",
+            " ",
+            " ",
+            " ",
+            " "
+        ],
+        "on-click": "ags -t quicksettings"
+    },
+    "pulseaudio": {
+        "format": "{icon} {volume}% {format_source}",
+        "format-bluetooth": " {icon} {volume}% {format_source}",
+        "format-bluetooth-muted": "  {icon} {format_source}",
+        "format-muted": "  {format_source}",
+        "format-source": " {volume}%",
+        "format-source-muted": " ",
+        "format-icons": {
+            "default": [
+                " ",
+                " ",
+                " "
+            ]
+        },
+        "on-click": "pavucontrol"
+    },
+    "custom/updates": {
+      "interval": 120,
+      "exec": "~/.config/waybar/modules/checkupdates",
+      "on-click-right": "pkexec ~/.config/waybar/modules/update",
+      "return-type": "json"
+    },
+    "custom/weather": {
+        "format": "{}",
+        "interval": 3600,
+        "exec": "curl -s 'https://wttr.in/Trabzon?format=1'",
+        "exec-if": "ping wttr.in -c1"
+    },
+    "custom/vpn": {
+        "tooltip": false,
+        "format": "VPN {} ",
+        "exec": "mullvad status | grep -q 'Connected' && echo '' || echo ' '",
+        "interval": 5,
+        "on-click": "mullvad connect",
+        "on-click-right": "mullvad disconnect"
+    },
+    "network": {
+        "format-wifi": "  {essid} ({signalStrength}%)",
+        "format-ethernet": "⬇ {bandwidthDownBytes} ⬆ {bandwidthUpBytes}",
+        "interval": 3,
+        "format-linked": "{ifname} (No IP)  ",
+        "format": " ",
+        "format-disconnected": " ",
+        "format-alt": "{ifname}: {ipaddr}/{cidr}",
+        "on-click": "wl-copy $(ip address show up scope global | grep inet | head -n1 | cut -d/ -f 1 | tr -d [:space:] | cut -c5-)",
+        "tooltip-format": " {bandwidthUpBits}  {bandwidthDownBits}\n{ifname}\n{ipaddr}/{cidr}\n",
+        "tooltip-format-wifi": "  {essid} {frequency}MHz\nStrength: {signaldBm}dBm ({signalStrength}%)\nIP: {ipaddr}/{cidr}\n {bandwidthUpBits}  {bandwidthDownBits}",
+        "min-length": 17,
+        "max-length": 17
+    }
+}
