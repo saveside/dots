@@ -14,7 +14,7 @@ This is my personal repo for my Arch linux configurations.
 | GTK             | `Collaid Gruvbox`                                    |
 | Icons           | `Flat-remix-orange-dark`                             |
 | Cursor          | `bibata`                                             |
-| File manager    | `thunar`                                             |
+| File manager    | `pcmanfm-qt`                                         |
 | Screenshot tool | `flameshot`                                          |
 | Polkit manager  | `lxsession`                                          |
 | Fonts           | `ttf-iosevka-nerd ttf-jetbrains-mono monaspace Neon` |
@@ -27,14 +27,14 @@ You can also use `yay -S --needed - < pkgs` to install all dependencies.
 Incomplete but should get you most things.
 
 ```bash
-# clone repository
-git clone https://github.com/saveside/dots.git
-# install required packages (requires root)
-pacman -S --needed $(cat dots/pkgs)
-# copy repository contents to HOME
-cp -r dots/.* $HOME
-# restart system
-reboot
+chezmoi init https://github.com/saveside/dots
+chezmoi apply -v
+# Optional if you want to get san francisco pro font
+mkdir -p ~/.fonts
+wget xeome.dev/sf-pro.zip && unzip sf-pro.zip -d ~/.fonts
+wget https://github.com/githubnext/monaspace/releases/download/v1.000/monaspace-v1.000.zip && unzip monaspace-v1.000.zip -d ~/.fonts
+fc-cache -frv
+rm -rf "sf-pro.zip" "monaspace-v1.000.zip"
 ```
 
 # Some shortcuts
@@ -42,7 +42,7 @@ reboot
 | Shortcut               | Action                             |
 | ---------------------- | ---------------------------------- |
 | Super + Return (enter) | Launch terminal (`alacritty`)      |
-| Super + W              | Launch file manager (`thunar`)     |
+| Super + W              | Launch file manager (`pcmanfm-qt`) |
 | Super + Q              | Launch web browser (`brave`)       |
 | Super + Shift + C      | Close focused application          |
 | Super + Shift + R      | Restart window manager             |
