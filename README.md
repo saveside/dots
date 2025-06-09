@@ -1,3 +1,4 @@
+![banner](assets/Banner.png)
 This is my personal repo for my dotfiles.
 
 # Dependencies
@@ -43,5 +44,9 @@ rm -rf "monaspace-v1.000.zip"
 | Super + Shift + Q      | Quit window manager                |
 | Super + R              | Start program launcher (`rofi`)    |
 | Super + 1-9            | Switch workspaces from 1 to 9      |
+
+# Screenshots
+
+![hyprland](assets/desktop.png)
 
 
