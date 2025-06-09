@@ -1,0 +1,176 @@
+/* ===== IMPORTS ===== */
+@import "oxocarbon.css";
+
+/* ===== GLOBAL STYLES ===== */
+* {
+    font-family: "SF Pro Display", "JetBrainsMono Nerd Font", sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    min-height: 0;
+    transition: none;
+}
+
+/* ===== MAIN WINDOW ===== */
+window#waybar {
+    background: rgba(0, 0, 0, 0.6);
+    color: @foreground;
+    border-bottom: 2px solid alpha(@foreground, 0.15);
+}
+
+
+/* ===== COMMON MODULE STYLES ===== */
+#pulseaudio,
+#clock,
+#battery,
+#network,
+#tray,
+#custom-swaync,
+#idle_inhibitor,
+#custom-vpn {
+    margin-left: 2px;
+    margin-right: 2px;
+    padding: 1px 8px;
+    transition: background-color 150ms ease;
+}
+
+#pulseaudio:hover,
+#clock:hover,
+#battery:hover,
+#network:hover,
+#tray:hover,
+#custom-swaync:hover,
+#idle_inhibitor:hover,
+#custom-vpn:hover {
+    background-color: alpha(@foreground, 0.1);
+}
+
+/* ===== INDIVIDUAL MODULES ===== */
+/* Notification Center */
+#custom-swaync {
+    color: @magenta;
+}
+
+/* Audio */
+#pulseaudio {
+    color: @green;
+}
+
+/* Clock */
+#clock {
+    color: @red;
+}
+
+#clock.date {
+    color: @purple;
+}
+
+/* Network */
+#network {
+    color: @yellow;
+}
+
+/* Idle Inhibitor */
+#idle_inhibitor {
+    padding: 2px 18px 2px 10px;
+    color: @red;
+}
+
+#idle_inhibitor.activated {
+    color: @green;
+    animation: glow 2s infinite;
+}
+
+/* Battery */
+#battery.charging,
+#battery.plugged {
+    color: @green;
+}
+
+#battery.warning {
+    color: @yellow;
+}
+
+#battery.critical {
+    color: @red;
+    animation: blink 1s infinite;
+}
+
+/* VPN */
+#custom-vpn {
+    color: @green;
+}
+
+/* ===== WORKSPACES ===== */
+#workspaces button {
+    padding: 0 12px;
+    margin-top: 2px;
+    border-radius: 0;
+    background-color: alpha(@background, 0.30);
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+#workspaces button:hover {
+    background-color: alpha(@foreground, 0.1);
+}
+
+#workspaces button.active {
+    background-color: @foreground;
+    color: @background;
+}
+
+#workspaces button.urgent {
+    background-color: @red;
+    animation: pulse 1s infinite;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 5px @green;
+    }
+
+    50% {
+        box-shadow: 0 0 15px @red;
+    }
+
+    100% {
+        box-shadow: 0 0 5px @red;
+    }
+}
+
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* ===== LAYOUT ADJUSTMENTS ===== */
+.modules-left>widget:first-child>#workspaces {
+    margin-left: 0;
+}
+
+.modules-right>widget:last-child>#workspaces {
+    margin-right: 0;
+}
