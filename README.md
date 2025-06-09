@@ -16,8 +16,6 @@ This is my personal repo for my dotfiles.
 | Fonts           | `ttf-iosevka-nerd ttf-jetbrains-mono monaspace Neon` |
 | Editor          | `neovim`                                             |
 
-You can also use `yay -S --needed - < pkgs` to install all dependencies.
-
 # Installation
 
 Incomplete but should get you most things.
