@@ -1,16 +1,56 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -e
 
-. /etc/os-release
+# ┌────────────────────┐
+# │  Save's Dots Setup │
+# └────────────────────┘
 
-# Check if the distribution is Arch-based
-if [[ "$ID_LIKE" == "arch" ]]; then
+echo "┌────────────────────┐"
+echo "│  Save's Dots Setup │"
+echo "└────────────────────┘"
+echo
+
+# ── Choose dotfiles repo ───────────────────────────────
+echo "Choices:"
+echo "1.) Save's Dots (default)"
+echo "2.) Jomo's Dots (for testing and other reasons)"
+read -rp "Enter choice [1/2]: " choice
+
+case "$choice" in
+    2)
+        gh_repo_url="https://github.com/jomo-dev/dots"
+        ;;
+    1|"")
+        gh_repo_url="https://github.com/saveside/dots"
+        ;;
+    *)
+        echo "❌ Invalid choice. Defaulting to Save's Dots."
+        gh_repo_url="https://github.com/saveside/dots"
+        ;;
+esac
+
+# ── Check if GitHub repo is reachable ──────────────────
+echo
+echo "🌐 Checking GitHub repo URL..."
+gh_status=$(wget --server-response --spider "$gh_repo_url" 2>&1 | awk '/HTTP\// {print $2; exit}')
+if [ "$gh_status" -eq 200 ]; then
+    echo "✅ GitHub repo is reachable."
+else
+    echo -e "❌ GitHub repo is NOT reachable :( \nExiting."
+    exit 1
+fi
+
+# ── Check if system is Arch-based ──────────────────────
+id_like=$(grep '^ID_LIKE=' /etc/os-release | head -n1 | sed 's/^ID_LIKE=//; s/"//g')
+
+if [[ "$id_like" == *arch* ]]; then
     echo "✅ Distribution is Arch-based. Continuing setup..."
 else
     echo "❌ Distribution is not Arch-based. This script is intended for Arch-based systems only."
     exit 1
 fi
 
-# Detect available AUR helper
+# ── Detect or install AUR helper ───────────────────────
 echo "🔍 Checking for AUR helper (yay or paru)..."
 if command -v yay &> /dev/null; then
     echo "✅ AUR helper 'yay' detected."
@@ -21,7 +61,7 @@ elif command -v paru &> /dev/null; then
 else
     echo "⚠️  No AUR helper found on the system."
     echo "📦 Installing prerequisites: base-devel and git..."
-    pacman -S --needed base-devel git
+    sudo pacman -S --needed base-devel git
 
     echo "⬇️  Cloning 'yay' from the AUR..."
     cd "$(mktemp -d)" || exit
@@ -35,7 +75,7 @@ else
     echo "✅ AUR helper 'yay' installed successfully."
 fi
 
-# Install packages from remote list
+# ── Install packages from GitHub list ──────────────────
 echo "⬇️  Downloading package list from GitHub..."
 cd "$(mktemp -d)" || exit
 wget https://raw.githubusercontent.com/saveside/dots/refs/heads/main/pkgs
@@ -43,48 +83,44 @@ wget https://raw.githubusercontent.com/saveside/dots/refs/heads/main/pkgs
 echo "📦 Installing packages using $aur_helper..."
 $aur_helper -S --needed - < pkgs
 
-# Initialize and apply chezmoi dotfiles
+# ── Set up chezmoi with selected repo ──────────────────
 echo "🎯 Setting up dotfiles with chezmoi..."
-chezmoi init https://github.com/saveside/dots
+chezmoi init "$gh_repo_url"
 chezmoi apply -v
 
-# Download fonts (SF Pro with fallback, and Monaspace)
+# ── Download and install fonts ─────────────────────────
 echo "🔤 Downloading fonts..."
 
 sf_pro_url="https://files.savew.dev/sf-pro.zip"
 sf_pro_fallback="https://files.xeome.dev/sf-pro.zip"
-monaspace_url="https://github.com/githubnext/monaspace/releases/download/v1.000/monaspace-v1.000.zip"
 
 echo "🌐 Checking SF Pro font URL..."
-status=$(curl -o /dev/null -s -w "%{http_code}" "$sf_pro_url")
+status=$(wget --server-response --spider "$sf_pro_url" 2>&1 | awk '/HTTP\// {print $2; exit}')
 if [ "$status" -eq 200 ]; then
     echo "✅ SF Pro font URL is reachable. Downloading..."
     wget "$sf_pro_url"
 else
-    echo "⚠️  SF Pro main URL failed. Using fallback..."
-    wget "$sf_pro_fallback"
+    echo "⚠️  SF Pro main URL failed. Checking fallback URL..."
+    fallback_status=$(wget --server-response --spider "$sf_pro_fallback" 2>&1 | awk '/HTTP\// {print $2; exit}')
+    if [ "$fallback_status" -eq 200 ]; then
+        echo "✅ Fallback URL is reachable. Downloading fallback font..."
+        wget "$sf_pro_fallback"
+    else
+        echo "❌ Both main and fallback URLs are unreachable. Exiting."
+        exit 1
+    fi
 fi
 
-echo "🌐 Checking Monaspace font URL..."
-status=$(curl -o /dev/null -s -w "%{http_code}" "$monaspace_url")
-if [ "$status" -eq 200 ]; then
-    echo "✅ Monaspace font URL is reachable. Downloading..."
-    wget "$monaspace_url"
-else
-    echo "❌ Failed to download Monaspace font."
-fi
-
-# Install fonts
+# ── Extract and refresh fonts ──────────────────────────
 echo "🗂️  Extracting fonts to ~/.fonts..."
 mkdir -p ~/.fonts
-unzip -q sf-pro.zip -d ~/.fonts
-unzip -q monaspace-v1.000.zip -d ~/.fonts
+bsdtar -xf sf-pro.zip -C ~/.fonts
 
 echo "🌀 Refreshing font cache..."
 fc-cache -frv
 
 echo "🧹 Cleaning up downloaded font archives..."
-rm -rf "sf-pro.zip" "monaspace-v1.000.zip"
+rm "sf-pro.zip"
 
+# ── Done ───────────────────────────────────────────────
 echo "✅ All done! jomolayana..."
-
