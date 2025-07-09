@@ -18,7 +18,7 @@ read -rp "Enter choice [1/2]: " choice
 
 case "$choice" in
     2)
-        gh_repo_url="https://github.com/jomo-dev/dots"
+        gh_repo_url="https://github.com/xeome/dots"
         ;;
     1|"")
         gh_repo_url="https://github.com/saveside/dots"
