@@ -1,5 +1,5 @@
 ![banner](assets/Banner.png)
-This is my personal repo for my dotfiles. Based on ![Jomo's Dotfiles](https://github.com/xeome/dots). There is almost no difference between them.
+This is my personal repo for my dotfiles. Based on [Jomo's Dotfiles](https://github.com/xeome/dots). There is almost no difference between them.
 
 # Dependencies
 
