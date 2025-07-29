@@ -21,6 +21,8 @@ zst() {
 
 alias rsync="rsync -avz --progress --partial --human-readable"
 alias tldr="cht.sh"
-alias c="clear"
-alias ls="eza"
-alias k="kubectl"
+alias c=clear
+alias k=kubecolor
+alias ls=eza
+alias ff=fastfetch
+alias sp='ncspot'
