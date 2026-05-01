@@ -1,0 +1,24 @@
+# =============================================================================
+# HYPRLAND MAIN CONFIGURATION
+# =============================================================================
+# This is the main entry point for Hyprland configuration.
+#
+# SWITCHING DEVICE PROFILES:
+# To switch between devices, change the device profile include below:
+# - Desktop dual monitor: source = devices/desktop-dual.conf
+# - Laptop: source = devices/laptop.conf
+# - Add your own: source = devices/<your-profile>.conf
+# =============================================================================
+
+# =============================================================================
+# INCLUDE ORDER (DO NOT CHANGE)
+# =============================================================================
+
+# 1. Shared configuration (device-agnostic settings)
+source = shared.conf
+
+# 2. Device-specific configuration (CHANGE THIS LINE TO SWITCH PROFILES)
+source = devices/{{ .chezmoi.hostname }}.conf
+
+# 3. Optional local user overrides (git-ignored, create if needed)
+# source = user.local.conf

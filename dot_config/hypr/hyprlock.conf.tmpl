@@ -1,0 +1,209 @@
+# =============================================================================
+# HYPRLOCK CONFIGURATION
+# Managed by chezmoi — edit: ~/.local/share/chezmoi/dot_config/hypr/hyprlock.conf.tmpl
+# =============================================================================
+
+# $scr2: monitor for device-specific widgets (input field, player, info)
+$scr2 = {{ if eq .chezmoi.hostname "yagiz-notebook" }}eDP-2{{ else }}DP-2{{ end }}
+
+# =============================================================================
+# GENERAL
+# =============================================================================
+general {
+    hide_cursor = true
+    ignore_empty_input = true
+    text_trim = true
+}
+
+# =============================================================================
+# BACKGROUND
+# =============================================================================
+background {
+    path = screenshot
+    blur_passes = 4
+    contrast = 1.5916
+    brightness = 1.0172
+    vibrancy = 1.1696
+    vibrancy_darkness = 0
+}
+
+# =============================================================================
+# CLOCK
+# =============================================================================
+
+# Hours
+label {
+    text = cmd[update:1000] echo "$(date +'%H')"
+    color = rgba(255, 255, 255, 1)
+    shadow_size = 3
+    shadow_color = rgb(0,0,0)
+    shadow_boost = 1.2
+    font_size = 150
+    font_family = AlfaSlabOne
+    position = 0, -250
+    halign = center
+    valign = top
+}
+
+# Minutes
+label {
+    text = cmd[update:1000] echo "$(date +'%M')"
+    color = rgba(255, 255, 255, 1)
+    font_size = 150
+    font_family = AlfaSlabOne
+    position = 0, -420
+    halign = center
+    valign = top
+}
+
+# Date
+label {
+    text = cmd[update:1000] echo "$(date +'%d %b %A')"
+    color = rgba(255, 255, 255, 1)
+    font_size = 14
+    font_family = JetBrains Mono Nerd Font Mono ExtraBold
+    position = 0, -130
+    halign = center
+    valign = center
+}
+
+# =============================================================================
+# WEATHER
+# =============================================================================
+label {
+    text = cmd[update:1000] echo "$(bash ~/.config/hypr/bin/location.sh) $(bash ~/.config/hypr/bin/weather.sh)"
+    color = rgba(255, 255, 255, 1)
+    font_size = 10
+    font_family = JetBrains Mono Nerd Font Mono ExtraBold
+    position = 0, 465
+    halign = center
+    valign = center
+}
+
+# =============================================================================
+# MEDIA PLAYER
+# =============================================================================
+
+# Album art
+image {
+    monitor = $scr2
+    path = ~/.cache/playerctlock-art/latest.png
+    size = 60
+    rounding = 5
+    border_size = 0
+    rotate = 0
+    reload_time = 1
+    reload_cmd = ~/.config/hypr/bin/playerctlock.sh --arturl
+    position = -150, -300
+    halign = center
+    valign = center
+}
+
+# Track title
+label {
+    monitor = $scr2
+    text = cmd[update:1000] echo "$(~/.config/hypr/bin/playerctlock.sh --title)"
+    color = rgba(255, 255, 255, 0.8)
+    font_size = 12
+    font_family = JetBrains Mono Nerd Font Mono ExtraBold
+    position = 880, -290
+    halign = left
+    valign = center
+}
+
+# Track length
+label {
+    monitor = $scr2
+    text = cmd[update:1000] echo "$(~/.config/hypr/bin/playerctlock.sh --length)"
+    color = rgba(255, 255, 255, 1)
+    font_size = 11
+    font_family = JetBrains Mono Nerd Font Mono
+    position = -730, -310
+    halign = right
+    valign = center
+}
+
+# Playback status
+label {
+    monitor = $scr2
+    text = cmd[update:1000] echo "$(~/.config/hypr/bin/playerctlock.sh --status)"
+    color = rgba(255, 255, 255, 1)
+    font_size = 14
+    font_family = JetBrains Mono Nerd Font Mono
+    position = -740, -290
+    halign = right
+    valign = center
+}
+
+# Player source
+label {
+    monitor = $scr2
+    text = cmd[update:1000] echo "$(~/.config/hypr/bin/playerctlock.sh --source)"
+    color = rgba(255, 255, 255, 0.6)
+    font_size = 10
+    font_family = JetBrains Mono Nerd Font Mono
+    position = -740, -330
+    halign = right
+    valign = center
+}
+
+# Album name
+label {
+    monitor = $scr2
+    text = cmd[update:1000] echo "$(~/.config/hypr/bin/playerctlock.sh --album)"
+    color = rgba(255, 255, 255, 1)
+    font_size = 10
+    font_family = JetBrains Mono Nerd Font Mono
+    position = 880, -330
+    halign = left
+    valign = center
+}
+
+# Artist name
+label {
+    monitor = $scr2
+    text = cmd[update:1000] echo "$(~/.config/hypr/bin/playerctlock.sh --artist)"
+    color = rgba(255, 255, 255, 0.8)
+    font_size = 10
+    font_family = JetBrains Mono Nerd Font Mono ExtraBold
+    position = 880, -310
+    halign = left
+    valign = center
+}
+
+# =============================================================================
+# INPUT
+# =============================================================================
+input-field {
+    monitor = $scr2
+    size = 250, 60
+    outline_thickness = 0
+    outer_color = rgba(0, 0, 0, 1)
+    dots_size = 0.1
+    dots_spacing = 1
+    dots_center = true
+    inner_color = rgba(0, 0, 0, 1)
+    font_color = rgba(200, 200, 200, 1)
+    fade_on_empty = false
+    font_family = JetBrains Mono Nerd Font Mono
+    placeholder_text = <span foreground="##cdd6f4"> $USER</span>
+    hide_input = false
+    position = 0, -470
+    halign = center
+    valign = center
+    zindex = 10
+}
+
+# =============================================================================
+# SYSTEM INFO
+# =============================================================================
+label {
+    monitor = $scr2
+    text = cmd[update:1000] echo -e "$(~/.config/hypr/bin/infonlock.sh)"
+    color = rgba(255, 255, 255, 1)
+    font_size = 12
+    font_family = JetBrains Mono Nerd Font Mono ExtraBold
+    position = -20, -510
+    halign = right
+    valign = center
+}
