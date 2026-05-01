@@ -1,0 +1,12 @@
+[theme]
+# Pure Black Background
+background = "#000000"
+# Zinc Grey tones
+foreground = "#D1D1D1"
+border = "#3F3F3F"
+accent = "#888888"
+
+# Secondary elements
+match = "#A1A1A1"
+selected_bg = "#272727"
+selected_fg = "#FFFFFF"
