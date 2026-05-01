@@ -1,0 +1,48 @@
+[global]
+    ### Typography & Layout ###
+    # Matching your Waybar/Foot font
+    font = Iosevka Nerd Font Bold 10
+    
+    # TUI Density: tighter padding for a professional feel
+    padding = 12
+    horizontal_padding = 12
+    frame_width = 1
+    separator_height = 1
+    
+    # Sharp corners for TUI look
+    corner_radius = 0
+    
+    # Progress bar (like a volume/brightness indicator)
+    progress_bar = true
+    progress_bar_height = 8
+    progress_bar_frame_width = 1
+    progress_bar_min_width = 150
+    progress_bar_max_width = 300
+
+    ### Vesper Colors (Matching your 0d0d0d background) ###
+    frame_color = "#343434"      # Subtle border like your Waybar
+    separator_color = "frame"
+    
+    # Offset the notifications to fit your bar layout
+    offset = 15x15
+    origin = top-right
+
+[urgency_low]
+    background = "#0d0d0d"
+    foreground = "#a0a0a0"
+    timeout = 5
+
+[urgency_normal]
+    background = "#0d0d0d"
+    foreground = "#fce4ec"      # Your Sakura foreground
+    # Using your Waybar Maroon/Pink for the frame accent
+    highlight = "#f48fb1"
+    frame_color = "#f48fb1"     
+    timeout = 10
+
+[urgency_critical]
+    background = "#0d0d0d"
+    foreground = "#fce4ec"
+    frame_color = "#f06292"     # Vibrant Sakura for alerts
+    highlight = "#f06292"
+    timeout = 0

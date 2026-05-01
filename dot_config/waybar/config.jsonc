@@ -1,0 +1,161 @@
+// -*- mode: jsonc -*-
+{
+    "position": "top",
+    "height": 48,
+    "spacing": 0,
+    "reload_style_on_change": true,
+    // Module Layout: Workspaces | Window Title | MPRIS | DateTime | System Info | Tray
+    "modules-left": [
+        "hyprland/workspaces",
+        "mpris"
+    ],
+    "modules-center": [
+        "hyprland/window"
+    ],
+    "modules-right": [
+        "clock",
+        "network",
+        "custom/vpn",
+        "pulseaudio",
+        "battery",
+        "custom/water",
+        "idle_inhibitor",
+        "group/tray-expander"
+    ],
+    "battery": {
+        "bat": "BAT0",
+        "interval": 20,
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": "{icon}󱐋 {capacity}%",
+        "format-icons": [
+            "󰂎",
+            "󰁺",
+            "󰁻",
+            "󰁼",
+            "󰁽",
+            "󰁾",
+            "󰁿",
+            "󰂀",
+            "󰂁",
+            "󰂂",
+            "󰁹"
+        ],
+        "tooltip": true,
+        "tooltip-format": "Time: {time} left\nCapacity: {health}%\n{power} watts"
+    },
+    "mpris": {
+        "format": "{status_icon} {artist} - {title}",
+        "format-paused": "{status_icon} <i>{artist} - {title}</i>",
+        "format-stopped": "",
+        "tooltip-format": "{player}: {artist} - {title} [{position}/{length}]",
+        "status-icons": {
+            "playing": "󰐊",
+            "paused": "󰏤",
+            "stopped": "󰓛"
+        },
+        "player-icons": {
+            "default": "🎵"
+        },
+        "title-len": 20,
+        "artist-len": 20,
+        "album-len": 20
+    },
+    // Merged DateTime Module - Shows both time and date with calendar on hover
+    "clock": {
+        "format": "{:%H:%M  %a %d %b}",
+        "format-alt": "{:%Y-%m-%d %H:%M:%S}",
+        "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    "custom/vpn": {
+        "format": "{}",
+        "exec": "mullvad status | grep -q 'Connected' && echo '{\"text\":\"󱚿 \",\"class\":\"connected\"}' || echo '{\"text\":\"󱛀 \",\"class\":\"disconnected\"}'",
+        "return-type": "json",
+        "interval": 5,
+        "tooltip-format": "VPN Status\nClick to connect | Right-click to disconnect",
+        "on-click": "mullvad connect",
+        "on-click-right": "mullvad disconnect"
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": "󰾪"
+        },
+        "tooltip-format-activated": "Idle inhibitor: Active",
+        "tooltip-format-deactivated": "Idle inhibitor: Inactive"
+    },
+    "sway/workspaces": {
+        "format": "{icon}",
+        "on-click": "focus"
+    },
+    "network": {
+        "format-wifi": "󰤟  ↓{bandwidthDownBits} ↑{bandwidthUpBits}",
+        "format-ethernet": "󰈀 ↓{bandwidthDownBits} ↑{bandwidthUpBits}",
+        "interval": 3,
+        "format-linked": "{ifname} (No IP)",
+        "format": "",
+        "format-disconnected": "󰤟",
+        "format-alt": "{ifname}: {ipaddr}/{cidr}",
+        "on-click": "wl-copy $(ip address show up scope global | grep inet | head -n1 | cut -d/ -f 1 | tr -d [:space:] | cut -c5-)",
+        "tooltip-format": "↑ {bandwidthUpBits}  ↓ {bandwidthDownBits}\n{ifname}\n{ipaddr}/{cidr}",
+        "tooltip-format-wifi": "󰤟  {essid} {frequency}MHz\nStrength: {signaldBm}dBm ({signalStrength}%)\nIP: {ipaddr}/{cidr}\n↑ {bandwidthUpBits}  ↓ {bandwidthDownBits}",
+        "max-length": 50
+    },
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-bluetooth": "󰂰  {volume}%",
+        "format-bluetooth-muted": "󰂰󰖁 ",
+        "format-muted": "󰖁 ",
+        "format-source": " micrófono",
+        "format-source-muted": "",
+        "format-icons": {
+            "headphone": "󰋋",
+            "headset": "󰋋",
+            "default": ["󰕾  ", "󰖀  ", "󰕾  "], // low, medium, high
+            "bluetooth": "󰂰",
+            "phone": "󰂰"
+        },
+        "on-click": "pavucontrol",
+        "tooltip-format": "Volume: {volume}%\nClick to open mixer"
+    },
+    "tray": {
+        "spacing": 12,
+        "icon-size": 18
+    },
+    "custom/tray-expand-icon": {
+        "format": " ",
+        "oltip": false
+    },
+    "group/tray-expander": {
+        "drawer": {
+            "transition-duration": 325
+        },
+        "modules": [
+            "custom/tray-expand-icon",
+            "tray"
+        ],
+        "orientation": "inherit"
+    },
+    "hyprland/window": {
+        "format": "{}",
+        "max-length": 50,
+        "tooltip": false
+    },
+    "custom/hiddenwindow": {
+        "exec": "waybar-scripts check_special_workspace",
+        "tooltip": true,
+        "signal": 3
+    },
+    "custom/water": {
+        "format": "{}",
+        "exec": "~/.local/bin/water.py",
+        "return-type": "json",
+        "interval": 30,
+        "tooltip": true,
+        "on-click": "~/.local/bin/water.py --drank"
+    }
+}
